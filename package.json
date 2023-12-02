@@ -13,7 +13,7 @@
     "lint:style": "stylelint \"**/*.css\"",
     "lint:style:fix": "stylelint --fix \"**/*.css\"",
     "preview": "vite preview",
-    "prettier": "prettier"
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
   },
   "dependencies": {
     "react": "^18.2.0",
