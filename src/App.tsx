@@ -1,15 +1,15 @@
-import { Content } from "./Content";
-import { Navbar, Footer } from "./Navbar";
+import { Content } from "./components/Content";
+import { Navbar, Footer } from "./components/Navbar";
 
 import "./App.css";
 
 function App() {
   return (
-    <body className="flex flex-col h-screen justify-between">
+    <div className="flex flex-col h-screen justify-between">
       <Navbar />
       <Content />
       <Footer />
-    </body>
+    </div>
   );
 }
 

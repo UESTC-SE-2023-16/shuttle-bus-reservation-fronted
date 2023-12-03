@@ -1,11 +1,19 @@
 import { mdiExitToApp, mdiGithub } from "@mdi/js";
 import Icon from "@mdi/react";
+import { useSnapshot } from "valtio";
+
+import { titleState } from "../store";
 
 export function Navbar() {
+  const title = useSnapshot(titleState);
+
   return (
     <div className="w-full navbar bg-base-300 shadow-md">
-      <div className="flex-1 px-2 mx-2 font-bold">班车预约系统</div>
-      <div className="flex-none hidden lg:block">
+      <div className="navbar-start px-2 mx-2 font-bold text-lg">
+        班车预约系统
+      </div>
+      <div className="navbar-center font-semibold">{title.title}</div>
+      <div className="navbar-end">
         <NavbarMenu />
       </div>
     </div>
