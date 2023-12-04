@@ -1,13 +1,11 @@
-import {
-  mdiFormatListChecks,
-  mdiTicketAccount,
-  mdiArrowLeftRightBold,
-} from "@mdi/js";
+import { mdiFormatListChecks, mdiTicketAccount } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useSnapshot } from "valtio";
 
 import userImage from "../assets/user.jpg";
 import { pageState, titleState } from "../store";
+
+import { Trip } from "./Trip";
 
 export function Content() {
   return (
@@ -20,12 +18,12 @@ export function Content() {
 
 function SideBar() {
   return (
-    <div className="sidebar h-full w-56 bg-base-200">
+    <div className="sidebar h-full w-56 bg-base-200 min-w-fit">
       <ul className="menu rounded-box">
         <li className="pt-10 pb-10" onClick={pageSwitch("我的信息")}>
           <UserCard />
         </li>
-        <li className="pl-8" onClick={pageSwitch("行程预约", "")}>
+        <li className="pl-8" onClick={pageSwitch("行程预约")}>
           <span className="flex">
             <Icon path={mdiFormatListChecks} size={1} />
             <a>行程预约</a>
@@ -92,7 +90,7 @@ function Page() {
   }
   return (
     <div className="page flex-1">
-      <div className="page-content ">{component}</div>
+      <div className="page-content h-full">{component}</div>
     </div>
   );
 }
@@ -104,18 +102,6 @@ function UserInfo() {
         <div className="stat-title">Total Page Views</div>
         <div className="stat-value">89,400</div>
         <div className="stat-desc">21% more than last month</div>
-      </div>
-    </div>
-  );
-}
-
-function Trip() {
-  return (
-    <div className="justify-center flex pt-2">
-      <div className="destinations-info flex w-56 bg-cyan-600 text-white rounded-lg">
-        <span className="pl-2">清水河校区</span>
-        <Icon className="flex-1" path={mdiArrowLeftRightBold} size={1} />
-        <span className="pr-2">沙河校区</span>
       </div>
     </div>
   );
