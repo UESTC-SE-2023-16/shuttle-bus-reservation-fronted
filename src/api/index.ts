@@ -1,5 +1,7 @@
 import { SHA256 } from "crypto-js";
 
+import { showGlobalToast } from "../utils";
+
 const API_PREFIX = "http://localhost:25566";
 
 function apiFetch(path: string, options?: RequestInit) {
@@ -41,13 +43,20 @@ export const TICKET_STATUS = {
 
 export async function getBusBangos() {
   const res = await apiFetch("/bus/getBusInfo");
-  const busBangos: BusBango[] = (await res.json()).data;
+  const resData = await res.json();
+  console.log(resData);
+  showGlobalToast(resData.msg, resData.code === 200 ? "info" : "error");
+  if (resData.code !== 200) return null;
+  const busBangos: BusBango[] = resData.data;
   return busBangos;
 }
 
 export async function getUserTickets(userId: number) {
   const res = await apiFetch(`/ticket/getUserTicketInfo/${userId}`);
-  const tickets: Ticket[] = (await res.json()).data;
+  const resData = await res.json();
+  console.log(resData);
+  showGlobalToast(resData.msg, "success");
+  const tickets: Ticket[] = resData.data;
   return tickets;
 }
 
@@ -60,23 +69,18 @@ export async function buyBusBangoTicket(busBangoId: number, userId: number) {
     status: "S",
   };
 
-  return apiFetch("/ticket/register/", {
+  const res = apiFetch("/ticket/register/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(`Success: ${JSON.stringify(data)}`);
-      if (data.code === 200) return data.data as Omit<Ticket, "bus_info">;
-      else return null;
-    })
-    .catch((error) => {
-      console.error(`Error: ${error}`);
-      return null;
-    });
+  });
+  const resData = await (await res).json();
+  console.log(resData);
+  showGlobalToast(resData.msg, resData.code === 200 ? "info" : "error");
+  if (resData.code === 200) return resData.data as Omit<Ticket, "bus_info">;
+  else return null;
 }
 
 export async function changeTicketStatus(
@@ -89,23 +93,18 @@ export async function changeTicketStatus(
     status: status,
   };
 
-  return apiFetch(`/ticket/${ticketId}/`, {
+  const res = apiFetch(`/ticket/${ticketId}/`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(`Success: ${JSON.stringify(data)}`);
-      if (data.code === 200) return data.data as Ticket;
-      else return null;
-    })
-    .catch((error) => {
-      console.error(`Error: ${error}`);
-      return null;
-    });
+  });
+  const resData = await (await res).json();
+  console.log(resData);
+  showGlobalToast(resData.msg, resData.code === 200 ? "info" : "error");
+  if (resData.code === 200) return resData.data as Ticket;
+  else return null;
 }
 
 async function tempGetUser(account: string) {
@@ -116,7 +115,7 @@ async function tempGetUser(account: string) {
 export async function userLogin(account: string, password: string) {
   const data = {
     name: account,
-    password,
+    password: SHA256(password).toString(),
   };
   console.log(data);
   // return apiFetch("/user/login/", {

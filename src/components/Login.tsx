@@ -6,7 +6,10 @@ import { userLogin } from "../api";
 import CirclePng from "../assets/animate.png";
 import { userState } from "../store";
 
+import { Toast } from "./Toast";
+
 export function Login() {
+  const [alertToast, setAlertToast] = useState("");
   const [password, setPassword] = useState("");
   const [account, setAccount] = useState("");
   const navigate = useNavigate();
@@ -19,7 +22,7 @@ export function Login() {
       (res) => {
         console.log(res);
         if (!res) {
-          alert("账号或密码错误");
+          setAlertToast("账号或密码错误");
           return;
         } else if (res.id !== 0) {
           userState.user = {
@@ -29,14 +32,21 @@ export function Login() {
           };
           navigate("/");
         } else {
-          alert("账号或密码错误");
+          setAlertToast("账号或密码错误");
         }
       },
       (err) => {
         console.log(err);
-        alert("账号或密码错误");
+        setAlertToast("账号或密码错误");
       }
     );
+  };
+
+  const LToast = () => {
+    if (alertToast) {
+      return <Toast text={alertToast} type="error" />;
+    }
+    return <></>;
   };
 
   return (
@@ -68,6 +78,9 @@ export function Login() {
               loginCheck();
             }}
           >
+            <div className="form-control">
+              <LToast />
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">账号</span>

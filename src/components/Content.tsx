@@ -5,9 +5,10 @@ import Icon from "@mdi/react";
 import { minidenticon } from "minidenticons";
 import { useSnapshot } from "valtio";
 
-import { pageState, titleState, userState } from "../store";
+import { pageState, titleState, userState, globalToastState } from "../store";
 
 import { MyTicket } from "./MyTicket";
+import { Toast } from "./Toast";
 import { Trip } from "./Trip";
 
 export function Content() {
@@ -83,6 +84,7 @@ function pageSwitch(pageName: string, title: string | null = null) {
 // 按照点击的不同，切换不同的页面
 // 默认是行程预约
 function Page() {
+  const globalToast = useSnapshot(globalToastState);
   const state = useSnapshot(pageState);
   let component = <></>;
   switch (state.currentPage) {
@@ -99,8 +101,22 @@ function Page() {
       component = <Trip />;
       break;
   }
+
+  const GToast = () => {
+    if (globalToast.text) {
+      return (
+        <Toast
+          text={globalToast.text}
+          className="absolute top-50 right-0 z-50 w-1/5"
+          type={globalToast.type}
+        />
+      );
+    }
+  };
+
   return (
     <div className="page flex-1">
+      <GToast />
       <div className="page-content h-full">{component}</div>
     </div>
   );

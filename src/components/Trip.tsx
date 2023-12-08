@@ -31,7 +31,7 @@ export function Trip() {
 
     (async () => {
       const _tickets = await getBusBangos();
-      if (isCancelled) return;
+      if (isCancelled || !_tickets) return;
       setTickets(_tickets);
     })();
 

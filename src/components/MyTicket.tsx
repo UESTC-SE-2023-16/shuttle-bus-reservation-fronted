@@ -4,22 +4,25 @@ import { chunk } from "lodash";
 
 import { mdiArrowLeftRightBold, mdiArrowRight } from "@mdi/js";
 import Icon from "@mdi/react";
+import { useSnapshot } from "valtio";
 
 import { getUserTickets, changeTicketStatus, TICKET_STATUS } from "../api";
 import type { Ticket } from "../api";
 import BuyCode from "../assets/buy-code.svg";
+import { userState } from "../store";
 
 export function MyTicket() {
   const [curPage, setCurPage] = useState(1);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [columnCount, setColumnCount] = useState(3);
   const [rowCount, setrowCount] = useState(3);
+  const user = useSnapshot(userState);
 
   useEffect(() => {
     let isCancelled = false;
 
     (async () => {
-      const _tickets = await getUserTickets(1);
+      const _tickets = await getUserTickets(user.user.id);
       if (isCancelled) return;
       setTickets(_tickets);
     })();
@@ -27,7 +30,7 @@ export function MyTicket() {
     return () => {
       isCancelled = true;
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const handleResize = () => {

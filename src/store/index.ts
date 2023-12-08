@@ -15,3 +15,11 @@ export const userState = proxy({
     is_admin: false,
   },
 });
+
+export const globalToastState = proxy<{
+  text: string;
+  type: "error" | "success" | "warning" | "info";
+}>({
+  text: "",
+  type: "error",
+});

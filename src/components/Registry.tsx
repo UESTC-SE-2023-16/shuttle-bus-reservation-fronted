@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { userRegister } from "../api";
 import CirclePng from "../assets/animate.png";
 
+import { Toast } from "./Toast";
+
 export function Registry() {
   const [alertToast, setAlertToast] = useState("");
   const [registered, setRegistered] = useState(false);
@@ -28,8 +30,8 @@ export function Registry() {
           return;
         }
         if (res.code === 200) {
-          setAlertToast("注册成功");
           setRegistered(true);
+          setAlertToast("注册成功, 3秒后跳转到登陆页面");
           return;
         } else {
           setAlertToast(JSON.stringify(res.data, null, 2));
@@ -49,17 +51,21 @@ export function Registry() {
   };
 
   useEffect(() => {
-    if (alertToast) {
-      alert(alertToast);
-    }
-  }, [alertToast]);
-
-  useEffect(() => {
     if (registered) {
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
       return;
     }
   }, [registered, navigate]);
+
+  const RToast = () => {
+    if (alertToast) {
+      if (registered) return <Toast text={alertToast} type="success" />;
+      return <Toast text={alertToast} type="error" />;
+    }
+    return <></>;
+  };
 
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -90,6 +96,9 @@ export function Registry() {
               register();
             }}
           >
+            <div className="form-control">
+              <RToast />
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">账号</span>
