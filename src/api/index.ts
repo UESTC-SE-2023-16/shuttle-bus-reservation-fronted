@@ -55,7 +55,7 @@ export async function getUserTickets(userId: number) {
   const res = await apiFetch(`/ticket/getUserTicketInfo/${userId}`);
   const resData = await res.json();
   console.log(resData);
-  showGlobalToast(resData.msg, "success");
+  showGlobalToast(resData.msg, resData.code === 200 ? "info" : "error");
   const tickets: Ticket[] = resData.data;
   return tickets;
 }
@@ -81,6 +81,23 @@ export async function buyBusBangoTicket(busBangoId: number, userId: number) {
   showGlobalToast(resData.msg, resData.code === 200 ? "info" : "error");
   if (resData.code === 200) return resData.data as Omit<Ticket, "bus_info">;
   else return null;
+}
+
+export async function batchBuyBusBangoTicket(
+  busBangoId: number,
+  userId: number,
+  count: number
+) {
+  console.log(count);
+  const successTickes: Omit<Ticket, "bus_info">[] = [];
+  for (let i = 0; i < count; i++) {
+    const res = await buyBusBangoTicket(busBangoId, userId);
+    if (res) successTickes.push(res);
+    else continue;
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  }
+  showGlobalToast(`成功购买${successTickes.length}/${count}张车票`, "info");
+  return successTickes;
 }
 
 export async function changeTicketStatus(

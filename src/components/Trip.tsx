@@ -11,7 +11,11 @@ import {
 import Icon from "@mdi/react";
 import { useSnapshot } from "valtio";
 
-import { getBusBangos, buyBusBangoTicket, changeTicketStatus } from "../api";
+import {
+  getBusBangos,
+  changeTicketStatus,
+  batchBuyBusBangoTicket,
+} from "../api";
 import type { BusBango } from "../api";
 import BuyCode from "../assets/buy-code.svg";
 import { userState } from "../store";
@@ -279,19 +283,20 @@ function SelectSeatModal({
                 <button
                   className="btn btn-outline btn-warning btn-sm"
                   onClick={() => {
-                    for (let i = 0; i < buyCount; i++) {
-                      console.log(`buy ${i}`);
-                      buyBusBangoTicket(bango.id, user.user.id).then(
-                        (ticket) => {
-                          console.log(ticket);
-                          if (ticket === null) return;
-                          setBuyTicketIds((prev) => [...prev, ticket.id]);
-                        },
-                        (err) => {
-                          console.log(err);
-                        }
-                      ); // TODO: use current user id
-                    }
+                    batchBuyBusBangoTicket(
+                      bango.id,
+                      user.user.id,
+                      buyCount
+                    ).then(
+                      (tickets) => {
+                        console.log(tickets);
+                        if (tickets === null) return;
+                        setBuyTicketIds(tickets.map((ticket) => ticket.id));
+                      },
+                      (err) => {
+                        console.log(err);
+                      }
+                    );
                     setRemainedSeats(bango.remained_seats - buyCount);
                     createModalPopFunc(`buy-seat-modal-${bango.id}`)();
                     createModalCloseFunc(`select-seat-modal-${bango.id}`)();
