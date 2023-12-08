@@ -1,8 +1,9 @@
 import { mdiExitToApp, mdiGithub } from "@mdi/js";
 import Icon from "@mdi/react";
+import { useNavigate } from "react-router-dom";
 import { useSnapshot } from "valtio";
 
-import { titleState } from "../store";
+import { titleState, userState } from "../store";
 
 export function Navbar() {
   const title = useSnapshot(titleState);
@@ -21,11 +22,25 @@ export function Navbar() {
 }
 
 function NavbarMenu() {
+  const navigate = useNavigate();
+  const logout = () => {
+    userState.user = {
+      id: 0,
+      name: "",
+      is_admin: false,
+    };
+    navigate("/login");
+  };
+
   return (
     <ul className="menu menu-horizontal">
       {/* Navbar menu content here */}
       <li>
-        <a>
+        <a
+          onClick={() => {
+            logout();
+          }}
+        >
           <Icon path={mdiExitToApp} size={1} />
           退出
         </a>

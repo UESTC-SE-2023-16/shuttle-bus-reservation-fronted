@@ -7,3 +7,11 @@ export const pageState = proxy({
 export const titleState = proxy({
   title: "行程预约",
 });
+
+export const userState = proxy({
+  user: {
+    id: 0,
+    name: "",
+    is_admin: false,
+  },
+});

@@ -1,10 +1,13 @@
+import { useMemo } from "react";
+
 import { mdiFormatListChecks, mdiTicketAccount } from "@mdi/js";
 import Icon from "@mdi/react";
+import { minidenticon } from "minidenticons";
 import { useSnapshot } from "valtio";
 
-import userImage from "../assets/user.jpg";
-import { pageState, titleState } from "../store";
+import { pageState, titleState, userState } from "../store";
 
+import { MyTicket } from "./MyTicket";
 import { Trip } from "./Trip";
 
 export function Content() {
@@ -41,21 +44,29 @@ function SideBar() {
 }
 
 function UserCard() {
+  const user = useSnapshot(userState);
   return (
     <div className="user-card flex flex-col">
-      <Avator />
-      <div className="user-name pt-1">白面鸮</div>
+      <Avator user={user.user} />
+      <div className="user-name pt-1">{user.user.name}</div>
     </div>
   );
 }
 
-function Avator() {
+function Avator({ user }: { user: typeof userState.user }) {
+  const badge = user.is_admin ? "管理员" : "用户";
+  const svgURI = useMemo(
+    () =>
+      "data:image/svg+xml;utf8," + encodeURIComponent(minidenticon(user.name)),
+    [user]
+  );
+
   return (
     <div className="indicator user-avator">
-      <span className="indicator-item badge badge-primary">用户</span>
+      <span className="indicator-item badge badge-primary">{badge}</span>
       <div className="avator">
-        <div className="w-24">
-          <img className="rounded-xl" src={userImage} />
+        <div className="w-24 border border-neutral rounded-xl">
+          <img className="rounded-xl" src={svgURI} />
         </div>
       </div>
     </div>
@@ -82,7 +93,7 @@ function Page() {
       component = <Trip />;
       break;
     case "我的订单":
-      component = <>555</>;
+      component = <MyTicket />;
       break;
     default:
       component = <Trip />;
@@ -97,11 +108,15 @@ function Page() {
 
 function UserInfo() {
   return (
-    <div className="stats shadow">
-      <div className="stat">
-        <div className="stat-title">Total Page Views</div>
-        <div className="stat-value">89,400</div>
-        <div className="stat-desc">21% more than last month</div>
+    <div className="justify-start h-full">
+      <div className="flex flex-col justify-center h-full">
+        <div className="stats shadow">
+          <div className="stat">
+            <div className="stat-title">Total Page Views</div>
+            <div className="stat-value">89,400</div>
+            <div className="stat-desc">21% more than last month</div>
+          </div>
+        </div>
       </div>
     </div>
   );
