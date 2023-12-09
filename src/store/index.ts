@@ -13,6 +13,7 @@ export const userState = proxy({
     id: 0,
     name: "",
     is_admin: false,
+    token: "",
   },
 });
 

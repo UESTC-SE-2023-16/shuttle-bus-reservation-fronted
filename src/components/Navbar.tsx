@@ -28,6 +28,7 @@ function NavbarMenu() {
       id: 0,
       name: "",
       is_admin: false,
+      token: "",
     };
     navigate("/login");
   };

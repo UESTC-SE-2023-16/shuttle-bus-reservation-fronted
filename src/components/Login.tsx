@@ -29,6 +29,7 @@ export function Login() {
             id: res.id,
             name: res.name,
             is_admin: res.is_admin,
+            token: res.access_token,
           };
           navigate("/");
         } else {

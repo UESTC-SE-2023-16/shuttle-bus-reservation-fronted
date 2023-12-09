@@ -1,11 +1,36 @@
 import { SHA256 } from "crypto-js";
 
+import { userState } from "../store";
 import { showGlobalToast } from "../utils";
 
 const API_PREFIX = "http://localhost:25566";
 
-function apiFetch(path: string, options?: RequestInit) {
+/**
+ * @description 基础api请求
+ */
+function baseFetch(path: string, options?: RequestInit) {
   return fetch(`${API_PREFIX}${path}`, options);
+}
+
+/**
+ * @description 携带token的api请求
+ */
+function apiFetch(path: string, options?: RequestInit) {
+  console.log(userState);
+  const token = userState.user.token;
+  if (token) {
+    options = {
+      ...options,
+      headers: {
+        ...options?.headers,
+        token: token,
+      },
+    };
+  } else {
+    console.warn("No token found");
+    throw new Error("No token found");
+  }
+  return baseFetch(path, options);
 }
 
 export interface BusBango {
@@ -27,10 +52,11 @@ export interface Ticket {
   u_id: number;
 }
 
-export interface User {
+export interface UserLogined {
   id: number;
   name: string;
   is_admin: boolean;
+  access_token: string;
 }
 
 export const TICKET_STATUS = {
@@ -124,36 +150,13 @@ export async function changeTicketStatus(
   else return null;
 }
 
-async function tempGetUser(account: string) {
-  const res = await apiFetch(`/user/${account}/`);
-  return (await res.json()).data as User;
-}
-
 export async function userLogin(account: string, password: string) {
   const data = {
     name: account,
     password: SHA256(password).toString(),
   };
   console.log(data);
-  // return apiFetch("/user/login/", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(data),
-  // })
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     console.log(`Success: ${JSON.stringify(data)}`);
-  //     if (data.code === 200)
-  //       return data.data as { id: number; name: string; is_admin: boolean };
-  //     else return null;
-  //   })
-  //   .catch((error) => {
-  //     console.error(`Error: ${error}`);
-  //     return null;
-  //   });
-  const loginRes = await apiFetch("/user/login/", {
+  const loginRes = await baseFetch("/user/login/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -161,10 +164,10 @@ export async function userLogin(account: string, password: string) {
     body: JSON.stringify(data),
   });
   const loginData = await loginRes.json();
+  console.log(loginData);
+  showGlobalToast(loginData.msg, loginData.code === 200 ? "info" : "error");
   if (loginData.code !== 200) return null;
-  const userRes = await tempGetUser(account);
-  return userRes;
-  // TODO: 等待处理为正常逻辑
+  return loginData.data as UserLogined;
 }
 
 export async function userRegister(account: string, password: string) {
@@ -173,7 +176,7 @@ export async function userRegister(account: string, password: string) {
     password: SHA256(password).toString(),
   };
   console.log(data);
-  const pro = apiFetch("/user/register/", {
+  const pro = baseFetch("/user/register/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
