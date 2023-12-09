@@ -87,6 +87,29 @@ export async function getUserTickets(userId: number) {
   return tickets;
 }
 
+export async function updateUserInfo(
+  oldName: string,
+  newData: { name: string; password: string }
+): Promise<Omit<UserLogined, "access_token"> | null> {
+  const data = {
+    name: newData.name,
+    password: SHA256(newData.password).toString(),
+  };
+  const res = await apiFetch(`/user/${oldName}/`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const resData = await res.json();
+  console.log(resData);
+  showGlobalToast(resData.msg, resData.code === 200 ? "info" : "error");
+  if (resData.code === 200)
+    return resData.data as Omit<UserLogined, "access_token">;
+  else return null;
+}
+
 export async function buyBusBangoTicket(busBangoId: number, userId: number) {
   console.log(busBangoId, userId);
 
