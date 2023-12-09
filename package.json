@@ -15,6 +15,9 @@
     "preview": "vite preview",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
   },
+  "appConfig": {
+    "server": "http://localhost:25566"
+  },
   "dependencies": {
     "@mdi/js": "^7.3.67",
     "@mdi/react": "^1.6.1",

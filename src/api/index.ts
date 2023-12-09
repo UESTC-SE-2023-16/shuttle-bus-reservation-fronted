@@ -1,9 +1,10 @@
 import { SHA256 } from "crypto-js";
 
+import { appConfig } from "../../package.json";
 import { userState } from "../store";
 import { showGlobalToast } from "../utils";
 
-const API_PREFIX = "http://localhost:25566";
+const API_PREFIX = appConfig.server;
 
 /**
  * @description 基础api请求

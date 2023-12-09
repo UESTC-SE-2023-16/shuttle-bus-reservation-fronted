@@ -21,6 +21,22 @@
 pnpm i
 ```
 
+### 配置
+
+### 后端服务器地址
+
+后端服务器地址在 `package.json` 中的 `appConfig` 字段中配置, 默认为：
+
+```jsonc
+{
+  // ...
+  "appConfig": {
+    "server": "http://localhost:25566"
+  },
+  // ...
+}
+```
+
 ### 启动开发服务器
 
 ```bash
