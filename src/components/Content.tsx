@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { mdiFormatListChecks, mdiTicketAccount } from "@mdi/js";
 import Icon from "@mdi/react";
 import { minidenticon } from "minidenticons";
-import { useNavigate } from "react-router-dom";
 import { useSnapshot } from "valtio";
 
 import { updateUserInfo } from "../api";
@@ -129,7 +128,6 @@ function UserInfo() {
   const user = useSnapshot(userState);
   const [name, setName] = useState(user.user.name);
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const update = () => {
     if (name === user.user.name && password === "") {
@@ -142,12 +140,9 @@ function UserInfo() {
         if (res) {
           showGlobalToast("更新成功", "success");
           userState.user = {
-            id: 0,
-            name: "",
-            is_admin: false,
-            token: "",
+            ...user.user,
+            name: res.name,
           };
-          navigate("/login");
         } else {
           showGlobalToast("更新失败", "error");
         }
