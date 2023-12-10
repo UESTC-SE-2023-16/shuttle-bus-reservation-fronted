@@ -45,7 +45,11 @@ export function Login() {
 
   const LToast = () => {
     if (alertToast) {
-      return <Toast text={alertToast} type="error" />;
+      return alertToast !== "正在登陆" ? (
+        <Toast text={alertToast} type="error" />
+      ) : (
+        <Toast text={alertToast} type="info" />
+      );
     }
     return <></>;
   };
@@ -76,7 +80,10 @@ export function Login() {
             className="card-body"
             onSubmit={(e) => {
               e.preventDefault();
-              loginCheck();
+              setAlertToast("正在登陆");
+              setTimeout(() => {
+                loginCheck();
+              }, 500);
             }}
           >
             <div className="form-control">

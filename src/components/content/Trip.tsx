@@ -15,10 +15,10 @@ import {
   getBusBangos,
   changeTicketStatus,
   batchBuyBusBangoTicket,
-} from "../api";
-import type { BusBango } from "../api";
-import BuyCode from "../assets/buy-code.svg";
-import { userState } from "../store";
+} from "../../api";
+import type { BusBango } from "../../api";
+import BuyCode from "../../assets/buy-code.svg";
+import { userState } from "../../store";
 
 export function Trip() {
   // 当前页数

@@ -6,10 +6,10 @@ import { mdiArrowLeftRightBold, mdiArrowRight } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useSnapshot } from "valtio";
 
-import { getUserTickets, changeTicketStatus, TICKET_STATUS } from "../api";
-import type { Ticket } from "../api";
-import BuyCode from "../assets/buy-code.svg";
-import { userState } from "../store";
+import { getUserTickets, changeTicketStatus, TICKET_STATUS } from "../../api";
+import type { Ticket } from "../../api";
+import BuyCode from "../../assets/buy-code.svg";
+import { userState } from "../../store";
 
 export function MyTicket() {
   const [curPage, setCurPage] = useState(1);

@@ -16,7 +16,6 @@ export function Registry() {
 
   const register = () => {
     console.log("register");
-    setAlertToast("");
     if (!account || !password) {
       return;
     }
@@ -62,7 +61,9 @@ export function Registry() {
   const RToast = () => {
     if (alertToast) {
       if (registered) return <Toast text={alertToast} type="success" />;
-      return <Toast text={alertToast} type="error" />;
+      if (alertToast === "正在注册")
+        return <Toast text={alertToast} type="info" />;
+      else return <Toast text={alertToast} type="error" />;
     }
     return <></>;
   };
@@ -93,7 +94,10 @@ export function Registry() {
             className="card-body"
             onSubmit={(e) => {
               e.preventDefault();
-              register();
+              setAlertToast("正在注册");
+              setTimeout(() => {
+                register();
+              }, 500);
             }}
           >
             <div className="form-control">

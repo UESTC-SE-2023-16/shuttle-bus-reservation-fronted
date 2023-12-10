@@ -26,16 +26,22 @@ export function Toast({
 }) {
   const [typeCss, setTypeCss] = useState("");
 
+  const [toast, setToast] = useState<JSX.Element | null>(null);
+
   useMemo(() => {
-    setTypeCss(`alert-${type}`);
+    setTypeCss(`alert alert-${type} flex`);
   }, [type]);
 
-  return (
-    <div className={className}>
-      <div role="alert" className={`alert ${typeCss} flex`}>
-        <Icon path={toastIconMap[type]} size={1} />
-        <span>{text}</span>
+  useMemo(() => {
+    setToast(
+      <div className={className}>
+        <div role="alert" className={typeCss}>
+          <Icon path={toastIconMap[type]} size={1} />
+          <span>{text}</span>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }, [className, text, type, typeCss]);
+
+  return <>{toast}</>;
 }
